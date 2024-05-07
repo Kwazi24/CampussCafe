@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .profile-info {
+            margin-bottom: 20px;
+        }
+
+        .profile-info label {
+            font-weight: bold;
+        }
+
+        .profile-info p {
+            margin: 5px 0;
+        }
+
+        .edit-profile-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .edit-profile-btn:hover {
+            background-color: #45a049;
+        }
+
+        #avatar-input {
+            display: none;
+        }
+
+        #avatar-label {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            cursor: pointer;
+            color: #007bff;
+        }
+
+        #avatar-preview {
+            display: block;
+            margin: 20px auto;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        #avatar-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>User Profile</h2>
+        <div class="profile-info">
+            <label for="username">Username:</label>
+            <p id="username"></p>
+        </div>
+        <div class="profile-info">
+            <label for="email">Email:</label>
+            <p id="email"></p>
+        </div>
+        <div class="profile-info">
+            <label for="password">Password:</label>
+            <p id="password">******</p>
+        </div>
+        <label id="avatar-label" for="avatar-input">Change Profile Picture</label>
+        <input type="file" id="avatar-input" accept="image/*">
+        <div id="avatar-preview"></div>
+        <a href="editprofile.html" class="edit-profile-btn">Edit Profile</a>
+    </div>
+
+    <script>
+        // Retrieve user data from local storage
+        var userData = JSON.parse(localStorage.getItem("userData"));
+
+        // Populate profile page with user data
+        if (userData) {
+            document.getElementById("username").textContent = userData.username;
+            document.getElementById("email").textContent = userData.email;
+            // Set profile image if available
+            if (userData.avatar) {
+                document.getElementById("avatar-preview").innerHTML = '<img src="' + userData.avatar + '" alt="Avatar">';
+            }
+        }
+
+        // Handle avatar input change
+        var avatarInput = document.getElementById("avatar-input");
+        avatarInput.addEventListener("change", function(event) {
+            var file = event.target.files[0];
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var avatarPreview = document.getElementById("avatar-preview");
+                    avatarPreview.innerHTML = '<img src="' + e.target.result + '" alt="Avatar">';
+                    // Save image data to user data in local storage
+                    userData.avatar = e.target.result;
+                    localStorage.setItem("userData", JSON.stringify(userData));
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+</body>
+</html>
